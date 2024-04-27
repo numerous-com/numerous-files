@@ -17,6 +17,7 @@ dependencies = [
 dev = [
     "pytest==8.0.2",
     "pytest-asyncio==0.23.5",
+    "pytest-cov",
     "ruff",
     "mypy==1.8.0",
     "coverage==7.4.0",
