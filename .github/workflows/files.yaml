@@ -4,11 +4,12 @@ on:
     paths:
       - "**"
       - ".github/workflows/files.yml"
-      
+
 defaults:
   run:
     working-directory: ./
 permissions:
+  id-token: write
   contents: read
 jobs:
   lint:
