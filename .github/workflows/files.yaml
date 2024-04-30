@@ -37,14 +37,15 @@ jobs:
           aws --version
 
       - uses: actions/checkout@v4
-      - name: Debug Session Info
-        run: aws sts get-caller-identity
+      
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
           role-to-assume: arn:aws:iam::654654529166:role/numerous-files-test
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: eu-north-1
+      - name: Debug Session Info
+        run: aws sts get-caller-identity
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12' 
