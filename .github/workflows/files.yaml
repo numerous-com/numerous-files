@@ -30,6 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Debug Session Info
+        run: aws sts get-caller-identity
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
