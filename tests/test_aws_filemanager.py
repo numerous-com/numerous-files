@@ -1,11 +1,11 @@
 from pathlib import Path
 from typing import Generator
 
-import pytest  # type: ignore[import-not-found]
+import pytest
 from numerous.files.aws_s3 import FileManager
 
 
-@pytest.fixture() # type: ignore[misc]
+@pytest.fixture()
 def test_file_create() -> Generator[Path, None, None]:
 
     path_to_file = Path("test.txt")
@@ -15,7 +15,7 @@ def test_file_create() -> Generator[Path, None, None]:
     yield path_to_file
     Path.unlink(path_to_file)
 
-@pytest.fixture() # type: ignore[misc]
+@pytest.fixture()
 def file_manager() -> Generator[FileManager, None, None]:
 
     file_manager = FileManager(bucket="numerous-files", base_prefix="tests")

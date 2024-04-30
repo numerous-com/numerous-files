@@ -1,11 +1,11 @@
 from pathlib import Path
 from typing import Generator
 
-import pytest  # type: ignore[import-not-found]
+import pytest
 from numerous.files.memory import FileManager
 
 
-@pytest.fixture() # type: ignore[misc]
+@pytest.fixture()
 def test_file_create() -> Generator[Path, None, None]:
 
     path_to_file = Path("test.txt")
