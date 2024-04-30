@@ -34,7 +34,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
           role-to-assume: "arn:aws:iam::654654529166:role/numerous-files-test"
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          role-session-name: "GitHub_to_AWS_via_FederatedOIDC"
           aws-region: "eu-north-1"
       - uses: actions/setup-python@v5
         with:
