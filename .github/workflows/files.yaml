@@ -39,7 +39,8 @@ jobs:
           aws-region: eu-north-1
       - name: Debug Session Info
         run: aws sts get-caller-identity
-      - uses: actions/setup-python@v5
+      - name: run tests
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12' 
           cache: 'pip'
