@@ -1,5 +1,6 @@
 import os
 
+import pytest
 from numerous.files import file_manager_factory
 from numerous.files.aws_s3 import FileManager as AwsS3
 from numerous.files.memory import FileManager as Memory
@@ -21,18 +22,12 @@ def test_file_manager_factory_memory() -> None:
     # Cleanup
     del os.environ["NUMEROUS_FILES_BACKEND"]
 
-def test_file_manager_factory_aws_s3() -> None:
+def test_file_manager_factory_aws_s3(monkeypatch: pytest.MonkeyPatch) -> None:
     """Test the file manager factory with the aws s3 file manager."""
-    os.environ["NUMEROUS_FILES_BACKEND"] = "AWS_S3"
-    os.environ["NUMEROUS_FILES_BUCKET"] = "numerous-files"
-    os.environ["NUMEROUS_FILES_BASE_PREFIX"] = "tests"
+    monkeypatch.setenv("NUMEROUS_FILES_BACKEND", "AWS_S3")
+    monkeypatch.setenv("NUMEROUS_FILES_BUCKET", "numerous-files")
+    monkeypatch.setenv("NUMEROUS_FILES_BASE_PREFIX", "tests")
 
     file_manager = file_manager_factory()
     assert file_manager is not None
     assert isinstance(file_manager, AwsS3)
-
-    # Cleanup
-    del os.environ["NUMEROUS_FILES_BACKEND"]
-    del os.environ["NUMEROUS_FILES_BUCKET"]
-    del os.environ["NUMEROUS_FILES_BASE_PREFIX"]
-
