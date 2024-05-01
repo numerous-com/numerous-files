@@ -43,6 +43,9 @@ jobs:
         with:
           python-version: '3.12' 
           cache: 'pip'
+        env:
+          NUMEROUS_FILES_AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          NUMEROUS_FILES_AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - run: pip install -e .[dev]
       - run: coverage run -m pytest -vv tests/
       - run: coverage report | grep 'TOTAL' | awk '{print "COVERAGE_PCT=" $4}' >> $GITHUB_ENV

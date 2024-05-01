@@ -28,6 +28,17 @@ def file_manager_factory(**kwargs:dict[str,Any]) -> AwsS3|Memory:
         return Memory(**kwargs)
 
     if file_manager == "AWS_S3":
+        # Get the credentials from the environment.
+        if "NUMEROUS_FILES_AWS_ACCESS_KEY" in os.environ:
+            credentials = {
+                "aws_access_key_id": os.environ["NUMEROUS_FILES_AWS_ACCESS_KEY"],
+                "aws_secret_access_key": os.environ["NUMEROUS_FILES_AWS_SECRET_KEY"],
+            }
+        else:
+            credentials = None
+        # If the credentials are not in the environment,
+        # set them to None so the aws client will use default auth.
+
         # Get the bucket from the environment.
         bucket = os.environ["NUMEROUS_FILES_BUCKET"]
         # Get the base prefix from the environment.
@@ -39,7 +50,8 @@ def file_manager_factory(**kwargs:dict[str,Any]) -> AwsS3|Memory:
         }
         env_params.update(kwargs) # type: ignore[arg-type]
 
-        return AwsS3(bucket=env_params["bucket"], base_prefix=env_params["base_prefix"])
+        return AwsS3(bucket=env_params["bucket"],
+                     base_prefix=env_params["base_prefix"], credentials=credentials)
 
     err_str = f"Unknown file manager type {file_manager}"
     raise ValueError(err_str)
