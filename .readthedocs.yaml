@@ -1,9 +1,6 @@
 # .readthedocs.yaml
 version: 2
 
-sphinx:
-  configuration: none
-
 mkdocs:
   configuration: mkdocs.yml
 
