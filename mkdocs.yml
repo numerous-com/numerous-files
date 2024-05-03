@@ -1,8 +1,6 @@
 site_name: numerous-files docs
 nav:
   - Home: README.md
-  - License: LICENSE.md
-  - Contributing: CONTRIBUTING.md
   - GitHub: https://github.com/numerous-com/numerous-files
   - API Reference:
     - File Manager Factory: file_manager_factory.md
