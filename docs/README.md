@@ -53,7 +53,7 @@ file_manager.copy("from/my_file.txt","to/my_copy.txt")
 
 You can use the AWS backend if you have an AWS account. 
 
-To save files on AWS S3 a bucket and a base prefix is needed to be specified using the env variables NUMEROUS_FILES_BUCKET and NUMEROUS_FILES_BASE_PREFIX.
+To save files on AWS S3 a bucket (need to be created before using `file_manager`) and a base prefix is needed to be specified using the env variables NUMEROUS_FILES_BUCKET and NUMEROUS_FILES_BASE_PREFIX.
 
 In order for the file_manager to access your files on aws, you need to provide authentication to access AWS.
 
@@ -61,8 +61,8 @@ In order for the file_manager to access your files on aws, you need to provide a
 
 If you set the env variables NUMEROUS_FILES_AWS_ACCESS_KEY and NUMEROUS_FILES_AWS_SECRET_KEY with your aws credentials they will be used to authenticate. In case these env variables are not set the client will authenticate with the AWS credentials from your environment.
 
-If needed you can supply the names of the env variables you use to store information of the bucket, base_prefix, aws_access and aws_secrets ot the file_manager_factory method as the following key word arguments: bucket, base_prfix, aws_access_key_id, and aws_secret_access_key.
+If needed you can supply the names of the env variables you use to store information of the bucket, base_prefix, aws_access and aws_secrets to the file_manager_factory method as the following key word arguments: bucket, base_prefix, aws_access_key_id, and aws_secret_access_key.
 
 ## In Memory Backend
 
-The in-memory backend does not need any configuration. Please be aware no files stored in the in-memory backend will not be persisted.
+The in-memory backend does not need any configuration. Please be aware, files stored in the in-memory backend will not be persisted.
