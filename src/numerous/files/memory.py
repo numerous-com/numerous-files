@@ -8,7 +8,14 @@ from numerous.files.file_manager import StrOrPath
 
 class FileManager(FileManagerInterface):
 
-    """In Memory File manager."""
+    """
+    In Memory File manager.
+
+    This class provides an in-memory implementation of the FileManagerInterface.
+
+    Use this class for testing or when you want to store files in memory only.
+    This is the default file manager return by the file_manager_factory method.
+    """
 
     def __init__(self) -> None:
         self._files: dict[str, bytes] = {}
@@ -18,7 +25,6 @@ class FileManager(FileManagerInterface):
         Upload a file to a path.
 
         Args:
-        ----
             src: Source path.
             dst: Destination path.
 
@@ -31,7 +37,6 @@ class FileManager(FileManagerInterface):
         Remove a file at a path.
 
         Args:
-        ----
             path: Path to file.
 
         """
@@ -42,7 +47,6 @@ class FileManager(FileManagerInterface):
         List files at a path.
 
         Args:
-        ----
             path: Path to list files at.
 
         """
@@ -55,7 +59,6 @@ class FileManager(FileManagerInterface):
         Move a file from a source to a destination.
 
         Args:
-        ----
             src: Source path.
             dst: Destination path.
 
@@ -68,7 +71,6 @@ class FileManager(FileManagerInterface):
         Copy a file from a source to a destination.
 
         Args:
-        ----
             src: Source path.
             dst: Destination path.
 
@@ -80,7 +82,6 @@ class FileManager(FileManagerInterface):
         Download a file from a source to a destination.
 
         Args:
-        ----
             src: Source path.
             dest: Destination path.
 

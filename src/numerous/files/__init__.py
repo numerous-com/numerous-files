@@ -9,13 +9,16 @@ from numerous.files.memory import FileManager as Memory
 
 def file_manager_factory(**kwargs:dict[str,str]) -> AwsS3|Memory:
     """
-    Create file manager.
+    Use the factory for creating a file manager.
 
-    Checks value of ENVIRONMENT variable <NUMEROUS_FILES_BACKEND>
-    to determine the file manager to create.
+    This is the main entry point for using the numerous files module.
+    Use this method to get a file manager instance based on the value
+    of the `NUMEROUS_FILES_BACKEND` environment variable.
+
+    The file manager instance can be used to perform file management
+    operations such as reading, writing, and deleting files.
 
     Args:
-    ----
         file_manager: File manager type.
         **kwargs: Keyword arguments to pass to the file
 

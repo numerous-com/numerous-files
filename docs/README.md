@@ -1,4 +1,4 @@
-# Numerous Files
+# Welcome to Numerous Files
 
 The purpose of this package is to make a simple way to interface with both cloud, local and in-memory file storage to support a development and production workflow for web applications needing file storage. The idea is to have a common inteface where the backend can be changed without making code changes by setting env variables. In this way local development and testing can use in-memory or local file storage, eventually run tests with a cloud file storage provider and use cloud file storage in production.
 
@@ -7,8 +7,6 @@ Simply use the factory method to get a file manager instance. You can control wh
 ## Installation
 
 Install the package using pip:
-
-
 
 ```bash
 pip install numerous-files

@@ -1,0 +1,19 @@
+site_name: numerous-files docs
+nav:
+  - Home: README.md
+  - License: LICENSE.md
+  - Contributing: CONTRIBUTING.md
+  - GitHub: https://github.com/numerous-com/numerous-files
+  - API Reference:
+    - File Manager Factory: file_manager_factory.md
+    - The File Manager Interface: file_manager.md
+    - AWS S3 File Manager: aws_s3_file_manager.md
+    - Memory File Manager: memory_file_manager.md
+  
+theme: readthedocs
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: "python"
+      rendering:
+        show_source: false

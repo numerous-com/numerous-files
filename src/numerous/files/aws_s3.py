@@ -9,7 +9,34 @@ from numerous.files.file_manager import StrOrPath
 
 class FileManager(FileManagerInterface):
 
-    """AWS S3 Bucket File manager."""
+    """
+    AWS S3 Bucket File manager.
+
+    This class provides an AWS S3 implementation of the FileManagerInterface,
+    the files handled by this class are stored in an AWS S3 bucket.
+
+    Set the env variable `NUMEROUS_FILES_BACKEND` to `AWS_S3`
+    to get an instance of this class when using the file_manager_factory method.
+
+    To save files on AWS S3 a bucket and a base prefix is needed to be specified
+    using the env variables `NUMEROUS_FILES_BUCKET` and `NUMEROUS_FILES_BASE_PREFIX`.
+
+    In order for the file_manager to access your files on aws,
+    you need to provide authentication to access AWS.
+
+    If you set the env variables `NUMEROUS_FILES_AWS_ACCESS_KEY`
+    and `NUMEROUS_FILES_AWS_SECRET_KEY` with your aws credentials
+    they will be used for  authenticatication.
+
+    In case these env variables are not set the client will
+    authenticate with the AWS credentials from your environment.
+
+    If needed you can supply the names of the env variables you use to store
+    information of the bucket, base_prefix, aws_access and aws_secrets to
+    the file_manager_factory method as the following key word arguments:
+    bucket, base_prfix, aws_access_key_id, and aws_secret_access_key.
+
+    """
 
     def __init__(self, bucket: str, base_prefix: str,
                  credentials:Dict[str,Any]|None=None) -> None:
@@ -28,7 +55,6 @@ class FileManager(FileManagerInterface):
         Upload a file to a path.
 
         Args:
-        ----
             src: Source path.
             dst: Destination path.
 
@@ -40,7 +66,6 @@ class FileManager(FileManagerInterface):
         Remove a file at a path.
 
         Args:
-        ----
             path: Path to file.
 
         """
@@ -52,7 +77,6 @@ class FileManager(FileManagerInterface):
         List files at a path.
 
         Args:
-        ----
             path: Path to list files at.
 
         """
@@ -74,7 +98,6 @@ class FileManager(FileManagerInterface):
         Move a file from a source to a destination.
 
         Args:
-        ----
             src: Source path.
             dst: Destination path.
 
@@ -90,7 +113,6 @@ class FileManager(FileManagerInterface):
         Copy a file from a source to a destination.
 
         Args:
-        ----
             src: Source path.
             dst: Destination path.
 
@@ -104,7 +126,6 @@ class FileManager(FileManagerInterface):
         Download a file from a source to a destination.
 
         Args:
-        ----
             src: Source path.
             dest: Destination path.
 
