@@ -4,10 +4,11 @@ __version__ = "0.0.1"
 import os
 
 from numerous.files.aws_s3 import FileManager as AwsS3
+from numerous.files.local import FileManager as LocalFolder
 from numerous.files.memory import FileManager as Memory
 
 
-def file_manager_factory(**kwargs:dict[str,str]) -> AwsS3|Memory:
+def file_manager_factory(**kwargs:dict[str,str]) -> AwsS3|Memory|LocalFolder:
     """
     Use the factory for creating a file manager.
 
@@ -65,6 +66,11 @@ def file_manager_factory(**kwargs:dict[str,str]) -> AwsS3|Memory:
 
         return AwsS3(bucket=env_params["bucket"],
                      base_prefix=env_params["base_prefix"], credentials=credentials)
+
+    if file_manager == "LOCAL":
+        # Get a temporary folder from the operating system.
+
+        return LocalFolder(workfolder=str(kwargs.get("workfolder", "./tmp")))
 
     err_str = f"Unknown file manager type {file_manager}"
     raise ValueError(err_str)

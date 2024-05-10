@@ -2,7 +2,6 @@
 from typing import Any, Dict, List
 
 import boto3
-
 from numerous.files.file_manager import FileManager as FileManagerInterface
 from numerous.files.file_manager import StrOrPath
 

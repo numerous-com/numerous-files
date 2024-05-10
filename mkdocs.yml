@@ -7,6 +7,7 @@ nav:
     - The File Manager Interface: file_manager.md
     - AWS S3 File Manager: aws_s3_file_manager.md
     - Memory File Manager: memory_file_manager.md
+    - Local File Manager: local_file_manager.md
   
 theme: readthedocs
 plugins:
