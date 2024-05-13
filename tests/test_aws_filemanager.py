@@ -52,10 +52,10 @@ def test_file_move(test_file_create: str, file_manager: FileManager) -> None:
     assert upload_path not in file_manager.list("tests/")
 
 def test_file_copy(test_file_create: str, file_manager: FileManager) -> None:
-    upload_path = "tests/test_aws_filemanager.py"
+    upload_path = "tests/test.txt"
 
     file_manager.put(test_file_create, upload_path)
-    file_manager.copy(upload_path, "tests/text2.py")
+    file_manager.copy(upload_path, "tests/test2.txt")
 
     assert "tests/test2.txt" in file_manager.list("tests/")
     assert upload_path in file_manager.list("tests/")
