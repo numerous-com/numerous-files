@@ -101,9 +101,11 @@ class FileManager(FileManagerInterface):
             dst: Destination path.
 
         """
-        self._client.copy_object(Bucket=self._bucket,
-                                 CopySource=f"{self._bucket}/{self._base_prefix}/{src}",
-                                 Key=f"{self._base_prefix}/{dst}")
+        self._client.copy_object(
+            Bucket=self._bucket,
+            CopySource=f"{self._bucket}/{self._base_prefix}/{src}",
+            Key=f"{self._base_prefix}/{dst}",
+            )
         self._client.delete_object(Bucket=self._bucket,
                                    Key=f"{self._base_prefix}/{src}")
 
@@ -116,9 +118,11 @@ class FileManager(FileManagerInterface):
             dst: Destination path.
 
         """
-        self._client.copy_object(Bucket=self._bucket,
-                                 CopySource=f"{self._bucket}/{self._base_prefix}/{src}",
-                                 Key=f"{self._base_prefix}/{dst}")
+        self._client.copy_object(
+            Bucket=self._bucket,
+            CopySource=f"{self._bucket}/{self._base_prefix}/{src}",
+            Key=f"{self._base_prefix}/{dst}",
+            )
 
     def get(self, src: str, dest: StrOrPath) -> None:
         """
@@ -129,8 +133,10 @@ class FileManager(FileManagerInterface):
             dest: Destination path.
 
         """
-        self._client.download_file(self._bucket,
-                                   f"{self._base_prefix}/{src}", str(dest))
+        self._client.download_file(
+            self._bucket,
+            f"{self._base_prefix}/{src}", str(dest),
+            )
 
 
 if __name__ == "__main__":
