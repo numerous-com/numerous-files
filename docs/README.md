@@ -66,3 +66,7 @@ If needed you can supply the names of the env variables you use to store informa
 ## In Memory Backend
 
 The in-memory backend does not need any configuration. Please be aware, files stored in the in-memory backend will not be persisted.
+
+## Local Backend
+
+For the local backend you can configure the base folder for the file manager from where all paths will be relative. You set the workfolder by using the `workfolder` keyword when using the factory method.
