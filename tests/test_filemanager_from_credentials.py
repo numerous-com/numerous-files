@@ -8,7 +8,6 @@ from numerous.files import file_manager_factory
 
 @pytest.fixture()
 def file_text() -> Generator[Path, None, None]:
-
     path_to_file = Path("test.txt")
 
     with Path.open(path_to_file, "w") as f:

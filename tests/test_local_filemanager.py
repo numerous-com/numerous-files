@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 from typing import Generator
 
@@ -7,7 +8,6 @@ from numerous.files.local import FileManager
 
 @pytest.fixture()
 def test_file_create() -> Generator[Path, None, None]:
-
     path_to_file = Path("test.txt")
 
     with Path.open(path_to_file, "w") as f:
@@ -15,31 +15,28 @@ def test_file_create() -> Generator[Path, None, None]:
     yield path_to_file
     Path.unlink(path_to_file)
 
+@pytest.fixture()
+def file_manager() -> Generator[FileManager, None, None]:
+    workfolder = Path("./tmp")
 
-def test_file_manager_create() -> None:
+    file_manager = FileManager(workfolder=workfolder)
+    yield file_manager
 
-    file_manager = FileManager() # noqa: F841
+    # Cleanup
+    shutil.rmtree(workfolder)
 
-def test_file_put(test_file_create: str) -> None:
+def test_file_put(file_manager: FileManager, test_file_create: str) -> None:
 
-    file_manager = FileManager()
+    file_manager.put(test_file_create, "tests/test.txt")
 
-    file_manager.put(test_file_create, "tests/test_memory_filemanager.py")
-
-def test_file_remove(test_file_create: str) -> None:
-
-    file_manager = FileManager()
-
-    upload_path = "tests/test_memory_filemanager.py"
+def test_file_remove(file_manager: FileManager, test_file_create: str) -> None:
+    upload_path = "tests/test.txt"
 
     file_manager.put(test_file_create, upload_path)
     file_manager.remove(upload_path)
 
-def test_file_list(test_file_create: str) -> None:
-
-    file_manager = FileManager()
-
-    upload_path = "tests/test_memory_filemanager.py"
+def test_file_list(file_manager: FileManager, test_file_create: str) -> None:
+    upload_path = "tests/test.txt"
 
     file_manager.put(test_file_create, upload_path)
     results = file_manager.list("tests/")
@@ -47,30 +44,24 @@ def test_file_list(test_file_create: str) -> None:
     results = [r.replace("\\", "/") for r in results]
     assert upload_path in results
 
-def test_file_move(test_file_create: str) -> None:
-
-    file_manager = FileManager()
-
-    upload_path = "tests/test_memory_filemanager.py"
+def test_file_move(file_manager: FileManager, test_file_create: str) -> None:
+    upload_path = "tests/test.txt"
 
     file_manager.put(test_file_create, upload_path)
-    file_manager.move(upload_path, "tests/test_memory_filemanager2.py")
+    file_manager.move(upload_path, "tests/test2.txt")
 
     results = file_manager.list("tests/")
     # Replace \\ with / for Windows compatibility
     results = [r.replace("\\", "/") for r in results]
 
-    assert "tests/test_memory_filemanager2.py" in results
+    assert "tests/test2.txt" in results
     assert upload_path not in results
 
-def test_file_copy(test_file_create: str) -> None:
-
-    file_manager = FileManager()
-
-    upload_path = "tests/test_memory_filemanager.py"
+def test_file_copy(file_manager: FileManager, test_file_create: str) -> None:
+    upload_path = "tests/test.txt"
 
     file_manager.put(test_file_create, upload_path)
-    file_manager.copy(upload_path, "tests/test_memory_filemanager2.py")
+    file_manager.copy(upload_path, "tests/test2.txt")
 
     file_manager.list("tests/")
 
@@ -78,19 +69,16 @@ def test_file_copy(test_file_create: str) -> None:
     # Replace \\ with / for Windows compatibility
     results = [r.replace("\\", "/") for r in results]
 
-    assert "tests/test_memory_filemanager2.py" in results
+    assert "tests/test2.txt" in results
     assert upload_path in results
 
-def test_file_get(test_file_create: str) -> None:
-
-    file_manager = FileManager()
-
-    upload_path = "tests/test_memory_filemanager.py"
+def test_file_get(file_manager: FileManager, test_file_create: str) -> None:
+    upload_path = "tests/test.txt"
 
     file_manager.put(test_file_create, upload_path)
-    file_manager.get(upload_path, "test_memory_filemanager.py")
+    file_manager.get(upload_path, "test_download.txt")
 
-    with Path.open(Path("test_memory_filemanager.py")) as f:
+    with Path.open(Path("test_download.txt")) as f:
         assert f.read() == "Hello World!"
 
-    Path.unlink(Path("test_memory_filemanager.py"))
+    Path.unlink(Path("test_download.txt"))
