@@ -70,3 +70,6 @@ The in-memory backend does not need any configuration. Please be aware, files st
 ## Local Backend
 
 For the local backend you can configure the base folder for the file manager from where all paths will be relative. You set the workfolder by using the `workfolder` keyword when using the factory method.
+
+# Documentation
+For a more complete documentation of `numerous-files` please visit [numerous-files-docs](https://numerous-files.readthedocs.io/en/latest/) on readthedocs.
