@@ -16,12 +16,13 @@ def file_text() -> Generator[Path, None, None]:
 
     Path.unlink(path_to_file)
 
+
 def test_file_manager_create(file_text: str, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("NUMEROUS_FILES_BACKEND", "AWS_S3")
     monkeypatch.setenv("NUMEROUS_FILES_BUCKET", "numerous-files-test")
     monkeypatch.setenv("NUMEROUS_FILES_BASE_PREFIX", "tests")
 
-    print("Access key: ", os.environ["NUMEROUS_FILES_AWS_ACCESS_KEY"]) # noqa: T201
+    print("Access key: ", os.environ["NUMEROUS_FILES_AWS_ACCESS_KEY"])  # noqa: T201
 
     file_manager = file_manager_factory()
 

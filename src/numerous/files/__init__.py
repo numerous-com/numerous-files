@@ -1,4 +1,5 @@
 """Numerous files module."""
+
 __version__ = "0.0.1"
 
 import os
@@ -8,7 +9,7 @@ from numerous.files.local import FileManager as LocalFolder
 from numerous.files.memory import FileManager as Memory
 
 
-def file_manager_factory(**kwargs:dict[str,str]) -> AwsS3|Memory|LocalFolder:
+def file_manager_factory(**kwargs: dict[str, str]) -> AwsS3 | Memory | LocalFolder:
     """
     Use the factory for creating a file manager.
 
@@ -27,23 +28,26 @@ def file_manager_factory(**kwargs:dict[str,str]) -> AwsS3|Memory|LocalFolder:
     # Get the file manager type from the environment.
     file_manager = os.environ.get("NUMEROUS_FILES_BACKEND", "INMEMORY")
 
-
     if file_manager == "INMEMORY":
         return Memory(**kwargs)
 
     if file_manager == "AWS_S3":
-        env_var_aws_access_key = str(kwargs.get("aws_access_key_id",
-                                                "NUMEROUS_FILES_AWS_ACCESS_KEY"))
+        env_var_aws_access_key = str(
+            kwargs.get("aws_access_key_id", "NUMEROUS_FILES_AWS_ACCESS_KEY"),
+        )
         env_var_aws_secret_key = str(
-            kwargs.get("aws_secret_access_key", "NUMEROUS_FILES_AWS_SECRET_KEY"))
-        env_var_bucket = str(
-            kwargs.get("bucket", "NUMEROUS_FILES_BUCKET"))
-        env_var_base_prefix = str(kwargs.get(
-            "base_prefix", "NUMEROUS_FILES_BASE_PREFIX"))
+            kwargs.get("aws_secret_access_key", "NUMEROUS_FILES_AWS_SECRET_KEY"),
+        )
+        env_var_bucket = str(kwargs.get("bucket", "NUMEROUS_FILES_BUCKET"))
+        env_var_base_prefix = str(
+            kwargs.get("base_prefix", "NUMEROUS_FILES_BASE_PREFIX"),
+        )
 
         # Get the credentials from the environment.
-        if env_var_aws_access_key in os.environ \
-                and env_var_aws_secret_key in os.environ:
+        if (
+            env_var_aws_access_key in os.environ
+            and env_var_aws_secret_key in os.environ
+        ):
             credentials = {
                 "aws_access_key_id": os.environ[env_var_aws_access_key],
                 "aws_secret_access_key": os.environ[env_var_aws_secret_key],
@@ -62,10 +66,13 @@ def file_manager_factory(**kwargs:dict[str,str]) -> AwsS3|Memory|LocalFolder:
             "bucket": bucket,
             "base_prefix": base_prefix,
         }
-        env_params.update(kwargs) # type: ignore[arg-type]
+        env_params.update(kwargs)  # type: ignore[arg-type]
 
-        return AwsS3(bucket=env_params["bucket"],
-                     base_prefix=env_params["base_prefix"], credentials=credentials)
+        return AwsS3(
+            bucket=env_params["bucket"],
+            base_prefix=env_params["base_prefix"],
+            credentials=credentials,
+        )
 
     if file_manager == "LOCAL":
         # Get a temporary folder from the operating system.

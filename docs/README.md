@@ -29,6 +29,10 @@ file_manager.put("my_local_file.txt", "folder/and_name_on_file_backend.txt")
 
 # get the file just put
 file_manager.get("folder/and_name_on_file_backend.txt", "name_i_want_the_file_to_have_locally")
+
+# open a file
+with file_manager.open("folder/and_name_on_file_backend.txt", "r") as file:
+    content = file.read()
 ```
 
 To list, copy, move and remove files.

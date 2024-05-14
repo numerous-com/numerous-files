@@ -11,6 +11,7 @@ def test_file_manager_factory_default() -> None:
     assert file_manager is not None
     assert isinstance(file_manager, Memory)
 
+
 def test_file_manager_factory_memory() -> None:
     os.environ["NUMEROUS_FILES_BACKEND"] = "INMEMORY"
     file_manager = file_manager_factory()
@@ -19,6 +20,7 @@ def test_file_manager_factory_memory() -> None:
 
     # Cleanup
     del os.environ["NUMEROUS_FILES_BACKEND"]
+
 
 def test_file_manager_factory_aws_s3(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("NUMEROUS_FILES_BACKEND", "AWS_S3")

@@ -1,9 +1,54 @@
 """In Memory File manager."""
+
+import tempfile
+from pathlib import Path
 from typing import Any, Dict, List
 
 import boto3
 from numerous.files.file_manager import FileManager as FileManagerInterface
 from numerous.files.file_manager import StrOrPath
+
+
+class Open:
+    def __init__(
+        self,
+        file_manager: Any, # noqa: ANN401
+        filename: str,
+        mode: str = "r",
+    ) -> None:
+        self.file_manager = file_manager
+        self.filename = filename
+        self.mode = mode
+        self.file = None
+        self.file_path: None|Path = None
+
+    def __enter__(self): # type: ignore[no-untyped-def] # noqa: ANN204
+        """Open the file and return the file object."""
+        tempfile_ = tempfile.NamedTemporaryFile(delete=False)
+        self.file_path = Path(tempfile_.name)
+        tempfile_.close()
+
+        if self.file_manager.exists(self.filename):
+            self.file_manager.get(self.filename, self.file_path)
+        elif "w" in self.mode:
+            Path.touch(self.file_path)
+        elif "r" in self.mode:
+            err_msg = f"File {self.filename} does not exist."
+            raise FileNotFoundError(err_msg)
+
+        self.file = Path.open(self.file_path, self.mode) # type: ignore[assignment]
+        return self.file
+
+    def __exit__(self, *args: object) -> None:
+        """Close the file and save it if needed."""
+        if self.file:
+            self.file.close()
+            # Assuming the operations that modify the file are done,
+            # we save it when closing
+            if "w" in self.mode or "a" in self.mode:
+                self.file_manager.put(self.file.name, self.filename)
+            # Delete the temporary file.
+            Path.unlink(self.file.name)
 
 
 class FileManager(FileManagerInterface):
@@ -37,8 +82,9 @@ class FileManager(FileManagerInterface):
 
     """
 
-    def __init__(self, bucket: str, base_prefix: str,
-                 credentials:Dict[str,Any]|None=None) -> None:
+    def __init__(
+        self, bucket: str, base_prefix: str, credentials: Dict[str, Any] | None = None,
+    ) -> None:
         self._bucket = bucket
         self._base_prefix = base_prefix
 
@@ -48,8 +94,7 @@ class FileManager(FileManagerInterface):
             # Use the default session.
             self._client = boto3.client("s3")
 
-
-    def put(self, src: StrOrPath, dst: str ) -> None:
+    def put(self, src: StrOrPath, dst: str) -> None:
         """
         Upload a file to a path.
 
@@ -68,10 +113,11 @@ class FileManager(FileManagerInterface):
             path: Path to file.
 
         """
-        self._client.delete_object(Bucket=self._bucket,
-                                   Key=f"{self._base_prefix}/{path}")
+        self._client.delete_object(
+            Bucket=self._bucket, Key=f"{self._base_prefix}/{path}",
+        )
 
-    def list(self, path: str|None=None) -> List[str]:
+    def list(self, path: str | None = None) -> List[str]:
         """
         List files at a path.
 
@@ -83,14 +129,33 @@ class FileManager(FileManagerInterface):
             path = self._base_prefix
 
         query_result = self._client.list_objects(
-            Bucket=self._bucket, Prefix=f"{self._base_prefix}/{path}")
+            Bucket=self._bucket, Prefix=f"{self._base_prefix}/{path}",
+        )
         if "Contents" not in query_result:
             return []
         list_results = [obj["Key"] for obj in query_result["Contents"]]
 
         # Remove the base prefix from the results. But only first occurence.
-        return [result.replace(
-            f"{self._base_prefix}/", "", 1) for result in list_results]
+        return [
+            result.replace(f"{self._base_prefix}/", "", 1) for result in list_results
+        ]
+
+    def exists(self, path: str) -> bool:
+        """
+        Check if a file exists at a path.
+
+        Args:
+            path: Path to file.
+
+        Returns:
+            True if the file exists, False otherwise.
+
+        """
+        query_result = self._client.list_objects(
+            Bucket=self._bucket, Prefix=f"{self._base_prefix}/{path}",
+        )
+
+        return "Contents" in query_result
 
     def move(self, src: str, dst: str) -> None:
         """
@@ -105,9 +170,10 @@ class FileManager(FileManagerInterface):
             Bucket=self._bucket,
             CopySource=f"{self._bucket}/{self._base_prefix}/{src}",
             Key=f"{self._base_prefix}/{dst}",
-            )
-        self._client.delete_object(Bucket=self._bucket,
-                                   Key=f"{self._base_prefix}/{src}")
+        )
+        self._client.delete_object(
+            Bucket=self._bucket, Key=f"{self._base_prefix}/{src}",
+        )
 
     def copy(self, src: str, dst: str) -> None:
         """
@@ -122,7 +188,7 @@ class FileManager(FileManagerInterface):
             Bucket=self._bucket,
             CopySource=f"{self._bucket}/{self._base_prefix}/{src}",
             Key=f"{self._base_prefix}/{dst}",
-            )
+        )
 
     def get(self, src: str, dest: StrOrPath) -> None:
         """
@@ -135,8 +201,23 @@ class FileManager(FileManagerInterface):
         """
         self._client.download_file(
             self._bucket,
-            f"{self._base_prefix}/{src}", str(dest),
-            )
+            f"{self._base_prefix}/{src}",
+            str(dest),
+        )
+
+    def open(self, path: str, mode: str = "r") -> Open:
+        """
+        Open a file at a path.
+
+        Args:
+            path: Path to file.
+            mode: Mode to open file in.
+
+        Returns:
+            File content.
+
+        """
+        return Open(self, path, mode)
 
 
 if __name__ == "__main__":

@@ -1,9 +1,11 @@
 """Interface for file management operations."""
+
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List
+from typing import Any, List
 
 StrOrPath = Path | str
+
 
 class FileManager(ABC):
 
@@ -16,7 +18,7 @@ class FileManager(ABC):
     """
 
     @abstractmethod
-    def put(self, src: StrOrPath, dst: str ) -> None:
+    def put(self, src: StrOrPath, dst: str) -> None:
         """
         Upload a file to a path.
 
@@ -74,13 +76,28 @@ class FileManager(ABC):
         ...
 
     @abstractmethod
-    def get(self, src: str, dst: Path|str) -> None:
+    def get(self, src: str, dst: Path | str) -> None:
         """
         Download a file from a source to a destination.
 
         Args:
             src: Source file path.
             dst: Destination file path.
+
+        """
+        ...
+
+    @abstractmethod
+    def open(self, path: str, mode: str = "r") -> Any: # noqa: ANN401
+        """
+        Open a file at a path.
+
+        Args:
+            path: Path to file.
+            mode: Mode to open file in.
+
+        Returns:
+            File content.
 
         """
         ...
