@@ -94,6 +94,17 @@ class FileManager(FileManagerInterface):
             # Use the default session.
             self._client = boto3.client("s3")
 
+    def _wrap_path(self, path: str) -> str:
+        if self._base_prefix == "":
+            return path
+        return f"{self._base_prefix}/{path}"
+
+    def _unwrap_path(self, path: str) -> str:
+        if self._base_prefix == "":
+            return path
+        return path.replace(f"{self._base_prefix}/", "", 1)
+
+
     def put(self, src: StrOrPath, dst: str) -> None:
         """
         Upload a file to a path.
@@ -103,7 +114,7 @@ class FileManager(FileManagerInterface):
             dst: Destination path.
 
         """
-        self._client.upload_file(str(src), self._bucket, f"{self._base_prefix}/{dst}")
+        self._client.upload_file(str(src), self._bucket, self._wrap_path(dst))
 
     def remove(self, path: str) -> None:
         """
@@ -114,7 +125,7 @@ class FileManager(FileManagerInterface):
 
         """
         self._client.delete_object(
-            Bucket=self._bucket, Key=f"{self._base_prefix}/{path}",
+            Bucket=self._bucket, Key=self._wrap_path(path),
         )
 
     def list(self, path: str | None = None) -> List[str]:
@@ -129,7 +140,7 @@ class FileManager(FileManagerInterface):
             path = self._base_prefix
 
         query_result = self._client.list_objects(
-            Bucket=self._bucket, Prefix=f"{self._base_prefix}/{path}",
+            Bucket=self._bucket, Prefix=self._wrap_path(path),
         )
         if "Contents" not in query_result:
             return []
@@ -137,7 +148,7 @@ class FileManager(FileManagerInterface):
 
         # Remove the base prefix from the results. But only first occurence.
         return [
-            result.replace(f"{self._base_prefix}/", "", 1) for result in list_results
+            self._unwrap_path(result) for result in list_results
         ]
 
     def exists(self, path: str) -> bool:
@@ -152,7 +163,7 @@ class FileManager(FileManagerInterface):
 
         """
         query_result = self._client.list_objects(
-            Bucket=self._bucket, Prefix=f"{self._base_prefix}/{path}",
+            Bucket=self._bucket, Prefix=self._wrap_path(path),
         )
 
         return "Contents" in query_result
@@ -168,11 +179,11 @@ class FileManager(FileManagerInterface):
         """
         self._client.copy_object(
             Bucket=self._bucket,
-            CopySource=f"{self._bucket}/{self._base_prefix}/{src}",
-            Key=f"{self._base_prefix}/{dst}",
+            CopySource=f"{self._bucket}/"+self._wrap_path(src),
+            Key=self._wrap_path(dst),
         )
         self._client.delete_object(
-            Bucket=self._bucket, Key=f"{self._base_prefix}/{src}",
+            Bucket=self._bucket, Key=self._wrap_path(src),
         )
 
     def copy(self, src: str, dst: str) -> None:
@@ -186,7 +197,7 @@ class FileManager(FileManagerInterface):
         """
         self._client.copy_object(
             Bucket=self._bucket,
-            CopySource=f"{self._bucket}/{self._base_prefix}/{src}",
+            CopySource=f"{self._bucket}/"+self._wrap_path(src),
             Key=f"{self._base_prefix}/{dst}",
         )
 
@@ -201,7 +212,7 @@ class FileManager(FileManagerInterface):
         """
         self._client.download_file(
             self._bucket,
-            f"{self._base_prefix}/{src}",
+            self._wrap_path(src),
             str(dest),
         )
 

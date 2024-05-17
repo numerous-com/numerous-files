@@ -60,7 +60,7 @@ def file_manager_factory(**kwargs: dict[str, str]) -> AwsS3 | Memory | LocalFold
         # Get the bucket from the environment.
         bucket = os.getenv(env_var_bucket, "numerous-files")
         # Get the base prefix from the environment.
-        base_prefix = os.environ.get(env_var_base_prefix, "files")
+        base_prefix = os.environ.get(env_var_base_prefix, "")
 
         env_params = {
             "bucket": bucket,
