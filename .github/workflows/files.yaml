@@ -2,8 +2,8 @@ name: files
 env:
   PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  TWINE_USERNAME: __token__
-  TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+  #TWINE_USERNAME: __token__
+  #TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
 on:
   push:
     paths:
@@ -93,18 +93,15 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.9"
           cache: "pip"
       - uses: actions/download-artifact@v4
         id: download
         with:
           name: package
           path: ./dist
-      - uses: actions/setup-go@v5
-        with:
-          go-version: "1.21"
-          cache: false
-      - run: pip install python-semantic-release==9.6.0 twine==5.0.0
+      - run: pip install python-semantic-release==9.6.0
       - run: semantic-release version --commit --tag --push
-      - run: semantic-release publish
-      - run: twine upload --skip-existing --non-interactive dist/*
+      - run: semantic-release publish  
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
