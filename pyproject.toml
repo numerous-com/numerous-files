@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "numerous-files"
 readme = "README.md"
-dynamic = ['version']
+version = "0.1.0"
 classifiers = ["Programming Language :: Python :: 3"]
 dependencies = [
     "typing-extensions==4.9.0",
@@ -46,3 +46,23 @@ ignore = ["ANN101", "D101", "D103", "D107", "D211", "D212", "FA100", "FA102", "D
 
 [tool.mypy]
 exclude = ["build", "setup.py", ".*venv.*"]
+
+[tool.semantic_release]
+branch = "main"
+commit_parser = "angular"
+version_toml = ["pyproject.toml:project.version"]
+
+[tool.semantic_release.remote.token]
+env = "GH_TOKEN"
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = [
+    '''chore(?:\([^)]*?\))?: .+''',
+    '''ci(?:\([^)]*?\))?: .+''',
+    '''refactor(?:\([^)]*?\))?: .+''',
+    '''style(?:\([^)]*?\))?: .+''',
+    '''test(?:\([^)]*?\))?: .+''',
+    '''build\((?!deps\): .+)''',
+    '''Merged? .*''',
+    '''initial commit''',
+]
