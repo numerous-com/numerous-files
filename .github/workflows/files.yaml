@@ -83,6 +83,7 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     name: Release
+    environment: release
     needs: 
       - lint
       - test
@@ -93,7 +94,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "3.12"
           cache: "pip"
       - uses: actions/download-artifact@v4
         id: download
