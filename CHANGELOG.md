@@ -2,6 +2,13 @@
 
 
 
+## v0.1.2 (2024-10-17)
+
+### Fix
+
+* fix(files): Removed unnecessary requirements ([`21a44c1`](https://github.com/numerous-com/numerous-files/commit/21a44c1926bedfde91ef5911aa9937e782a007ca))
+
+
 ## v0.1.1 (2024-10-17)
 
 ### Documentation
